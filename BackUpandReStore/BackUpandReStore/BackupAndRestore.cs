@@ -192,14 +192,24 @@ namespace BackUpandReStore
             String nameDevice = "DEVICE_"+txtNameCSDL.Text;
             String nameDeviceLink = "DEVICE_" + txtNameCSDL.Text + ".bak";
             String sql = "EXEC sp_addumpdevice 'disk', '"+nameDevice+"', '"+Program.strPath+nameDeviceLink+"'";
-            Program.ExecuteSqlNonQuery(sql);
-            progress.Visible = true;
-            for (int i = this.progress.Minimum; i <= this.progress.Maximum; i++)
-                progress.Value = i;
-            progress.Visible = false;
+            int err = Program.ExecuteSqlNonQuery(sql);
+            if(err == 0)
+            {
+                progress.Visible = true;
+                for (int i = this.progress.Minimum; i <= this.progress.Maximum; i++)
+                    progress.Value = i;
+                progress.Visible = false;
+                MessageBox.Show("Tạo device thành công");
+            }
+            else
+            {
+                MessageBox.Show("Tạo device thất bại");
+            }
+            
             Program.conn.Close();
             String a = "";
             loadDevice(a);
+            return;
         }
 
         private void btnPhucHoi_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
